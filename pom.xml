@@ -64,12 +64,6 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.riversun</groupId>
-			<artifactId>google-oauth2-client-servlet</artifactId>
-			<version>0.8.2</version>
-		</dependency>
     
   	</dependencies>
   

@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import server.database.DbAccess;
-import server.database.Login;
 import server.service.MyEdmProvider;
 import server.service.MyEntityCollectionProcessor;
 import server.service.MyEntityProcessor;
@@ -27,8 +26,6 @@ public class Servlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LoggerFactory.getLogger(Servlet.class);
-
-	Login login = null;
 
 	protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 
@@ -52,7 +49,6 @@ public class Servlet extends HttpServlet {
 			handler.register(new MyPrimitiveProcessor(dbAccess));
 			
 			handler.process(req, resp);
-
 
 		}
 		catch (RuntimeException e) {
