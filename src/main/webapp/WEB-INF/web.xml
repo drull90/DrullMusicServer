@@ -10,10 +10,6 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <Context>
-        <Realm className="com.musicrealm.MusicRealm" debug="0"/>
-    </Context>
-
     <servlet-mapping>
         <servlet-name>Servlet</servlet-name>
         <url-pattern>/Service.svc/*</url-pattern>
@@ -30,7 +26,7 @@
 
     <login-config>
 		<auth-method>BASIC</auth-method>
-        <realm-name>MusicRealm</realm-name> 
+        <realm-name>MusicRealm</realm-name>
 	</login-config>
 
     <security-role>

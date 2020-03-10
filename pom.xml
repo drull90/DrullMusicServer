@@ -66,9 +66,26 @@
 		</dependency>
     
   	</dependencies>
-  
+
   	<build>
     	<finalName>Music</finalName>
+		<resources>
+			<resource>
+				<directory>src/main</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
   	</build>
   
 </project>
