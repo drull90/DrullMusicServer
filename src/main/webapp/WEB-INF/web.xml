@@ -25,10 +25,10 @@
     </security-constraint>
 
     <login-config>
-		<auth-method>FORM</auth-method>
-        <form-login-config>
+		<auth-method>BASIC</auth-method>
+        <!--<form-login-config>
             <form-login-page>/jsp/login.jsp</form-login-page>
-        </form-login-config>
+        </form-login-config>-->
 	</login-config>
 
     <security-role>
