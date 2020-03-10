@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-    <Realm className="com.musicrealm.MusicRealm" debug="0"/>
+    <Realm className="com.musicrealm.MusicRealm" debug="0">
+        <CredentialHandler className="org.apache.catalina.realm.MessageDigestCredentialHandler" algorithm="sha-512" />
+    </Realm>
 </Context>
