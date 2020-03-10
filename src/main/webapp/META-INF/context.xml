@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-    <Realm className="com.musicrealm.MusicRealm" debug="0">
-        <CredentialHandler className="org.apache.catalina.realm.MessageDigestCredentialHandler" algorithm="sha-512" />
+    <Realm className="org.apache.catalina.realm.JDBCRealm"
+        driverName="org.mariadb.jdbc.Driver"
+        connectionURL="jdbc:mysql://localhost/Music"
+        connectionName="Music"
+        connectionPassword="Musicpassword"
+        userTable="Usuarios" userNameCol="Nick" userCredCol="Password"
+        userRoleTable="Roles" roleNameCol="Roll">
+        <CredentialHandler className="org.apache.catalina.realm.MessageDigestCredentialHandler" algorithm="sha-512" iterations="100" saltlenght="4"/>
     </Realm>
 </Context>

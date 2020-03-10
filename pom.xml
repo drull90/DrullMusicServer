@@ -64,6 +64,12 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
     
   	</dependencies>
 
@@ -71,7 +77,11 @@
     	<finalName>Music</finalName>
 		<resources>
 			<resource>
-				<directory>src/main</directory>
+				<directory>/src/main/java</directory>
+				<excludes>
+					<exclude>**/webapp/META-INF/*</exclude>
+					<exclude>**/webapp/WEB-INF/*</exclude>
+				</excludes>
 			</resource>
 		</resources>
 		<plugins>
