@@ -30,7 +30,7 @@ public class MyEdmProvider extends CsdlAbstractEdmProvider {
             CsdlProperty id       = new CsdlProperty().setName("id").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
             CsdlProperty Titulo   = new CsdlProperty().setName("Titulo").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
             CsdlProperty Autor    = new CsdlProperty().setName("Autor").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-            CsdlProperty Duracion = new CsdlProperty().setName("Duracion").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            CsdlProperty Duracion = new CsdlProperty().setName("Duracion").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
 
             // create CsdlPropertyRef for Key element
             CsdlPropertyRef propertyRef = new CsdlPropertyRef();
@@ -45,25 +45,26 @@ public class MyEdmProvider extends CsdlAbstractEdmProvider {
 
             return entityType;
         }
-        /*
-        if( entityTypeName.equals(EntityConfig.ET_USER_FQN)) {
-            // create EntityType properties
-            CsdlProperty id             = new CsdlProperty().setName("ID").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
-            CsdlProperty name           = new CsdlProperty().setName("Name").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-            CsdlProperty description    = new CsdlProperty().setName("Description").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+
+        if (entityTypeName.equals(EntityConfig.ET_SOLICITUD_FQN)) {
+            CsdlProperty id       = new CsdlProperty().setName("id").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
+            CsdlProperty Titulo   = new CsdlProperty().setName("Titulo").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            CsdlProperty Autor    = new CsdlProperty().setName("Autor").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+			CsdlProperty Album    = new CsdlProperty().setName("Album").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+			CsdlProperty Nick 	  = new CsdlProperty().setName("Nick").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
 
             // create CsdlPropertyRef for Key element
             CsdlPropertyRef propertyRef = new CsdlPropertyRef();
-            propertyRef.setName("ID");
+            propertyRef.setName("id");
 
             // configure EntityType
             CsdlEntityType entityType 	= new CsdlEntityType();
-            entityType.setName(EntityConfig.ET_USER_NAME);
-            entityType.setProperties(Arrays.asList(id, name, description));
+            entityType.setName(EntityConfig.ET_SOLICITUD_NAME);
+            entityType.setProperties(Arrays.asList(id, Titulo, Autor, Album, Nick));
             entityType.setKey(Collections.singletonList(propertyRef));
 
             return entityType;
-        }*/
+        }
         
         return null;
     }
@@ -79,15 +80,14 @@ public class MyEdmProvider extends CsdlAbstractEdmProvider {
                 entitySet.setName(EntityConfig.ES_CANCIONES_NAME);
                 entitySet.setType(EntityConfig.ET_CANCION_FQN);
                 return entitySet;
-            }
-		
-		/*
-            if (entitySetName.equals(EntityConfig.ES_USUARIOS_NAME)) {
+			}
+			
+			if (entitySetName.equals(EntityConfig.ES_SOLICITUDES_NAME)) {
                 CsdlEntitySet entitySet = new CsdlEntitySet();
-                entitySet.setName(EntityConfig.ES_USUARIOS_NAME);
-                entitySet.setType(EntityConfig.ET_USER_FQN);
+                entitySet.setName(EntityConfig.ES_SOLICITUDES_NAME);
+                entitySet.setType(EntityConfig.ET_SOLICITUD_FQN);
                 return entitySet;
-            }*/
+            }
             
         }
 
@@ -103,8 +103,10 @@ public class MyEdmProvider extends CsdlAbstractEdmProvider {
 
         // add EntityTypes
         List<CsdlEntityType> entityTypes = new ArrayList<CsdlEntityType>();
+
 		entityTypes.add(getEntityType(EntityConfig.ET_CANCION_FQN));
-		//entityTypes.add(getEntityType(EntityConfig.ET_USER_FQN));
+        entityTypes.add(getEntityType(EntityConfig.ET_SOLICITUD_FQN));
+        
         schema.setEntityTypes(entityTypes);
 
         // add EntityContainer
@@ -121,8 +123,9 @@ public class MyEdmProvider extends CsdlAbstractEdmProvider {
     public CsdlEntityContainer getEntityContainer() throws ODataException {
         // create EntitySets
         List<CsdlEntitySet> entitySets = new ArrayList<CsdlEntitySet>();
+
         entitySets.add(getEntitySet(EntityConfig.CONTAINER, EntityConfig.ES_CANCIONES_NAME));
-		//entitySets.add(getEntitySet(EntityConfig.CONTAINER, EntityConfig.ES_USUARIOS_NAME));
+		entitySets.add(getEntitySet(EntityConfig.CONTAINER, EntityConfig.ES_SOLICITUDES_NAME));
 
         // create EntityContainer
         CsdlEntityContainer entityContainer = new CsdlEntityContainer();

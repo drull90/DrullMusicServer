@@ -20,6 +20,7 @@ import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
+import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
@@ -41,15 +42,20 @@ public class DbAccess {
 	}
 
     /* PUBLIC FACADE */
-
     public EntityCollection readEntitySetData(EdmEntitySet edmEntitySet, FilterOption filterOption) throws ODataApplicationException{
 
-        // actually, this is only required if we have more than one Entity Sets
-        if(edmEntitySet.getName().equals(EntityConfig.ES_CANCIONES_NAME)) {
-            return getCanciones(filterOption);
-        }
+        // actually, this is only required if we have more than one Entity Sets	
+		switch(edmEntitySet.getName()) {
 
-        return null;
+			case EntityConfig.ES_CANCIONES_NAME:
+				return getCanciones(filterOption);
+
+			case EntityConfig.ES_LISTAREPROD_NAME:
+				return null;
+
+			default:
+				return null;
+		}
     }
 
     public Entity readEntityData(EdmEntitySet edmEntitySet, List<UriParameter> keyParams) throws ODataApplicationException{
@@ -57,15 +63,72 @@ public class DbAccess {
         EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
         // actually, this is only required if we have more than one Entity Type
-        if(edmEntityType.getName().equals(EntityConfig.ET_CANCION_NAME)){
-            return getCancion(edmEntityType, keyParams);
-        }
+		switch(edmEntityType.getName()) {
 
-        return null;
-    }
+			case EntityConfig.ET_CANCION_NAME:
+				return getCancion(edmEntityType, keyParams);
+
+			case EntityConfig.ET_LISTAREPROD_NAME:
+				return null;
+
+			default:
+				return null;
+
+		}
+	}
+	
+	public Entity createEntityData(EdmEntitySet edmEntitySet, Entity requestEntity) {
+
+		EdmEntityType edmEntityType = edmEntitySet.getEntityType();
+
+		if(edmEntityType.getName().equals(EntityConfig.ET_SOLICITUD_NAME)) {
+			return createSolicitud(edmEntityType, requestEntity);
+		}
+
+		return null;
+	}
+
+	public void updateEntityData(EdmEntitySet edmEntitySet, List<UriParameter> keyParams, Entity updateEntity,
+		HttpMethod httpMethod) throws ODataApplicationException {
+
+	}
 
 
 	// PRIVATE SECTION
+	private Entity createSolicitud(EdmEntityType edmEntityType, Entity entity) {
+
+		Property Autor 	= entity.getProperty("Autor");
+		Property Titulo	= entity.getProperty("Titulo");
+		Property Album 	= entity.getProperty("Album");
+		Property Nick 	= entity.getProperty("Nick");
+
+		String query;
+		int newId = -1;
+
+		if(!Album.getValue().equals(""))
+			query = "INSERT INTO Solicitudes (Autor, Titulo, Album, Nick) VALUES ";
+		else	
+			query = "INSERT INTO Solicitudes (Autor, Titulo, Nick) VALUES ";
+			
+		query += "('" + Autor.getValue().toString() + "','" + Titulo.getValue().toString() + "',";
+		
+		if(!Album.getValue().equals(""))
+			query += "'" + Album.getValue().toString() + "',";
+		
+		query += "'" + Nick.getValue().toString() + "')";
+
+		try {
+			statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+			ResultSet rs = statement.getGeneratedKeys();
+			if(rs.next())
+				newId = rs.getInt(1);
+		} catch (SQLException e) {e.printStackTrace();}
+
+		entity.setId(createId("Solicitudes", newId));
+
+		return entity;
+	}
+
 
     private EntityCollection getCanciones(FilterOption filterOption) {
 		EntityCollection retEntitySet = new EntityCollection();
@@ -78,13 +141,7 @@ public class DbAccess {
 
         ResultSet rs = null;
         try {
-            rs =  statement.executeQuery(query);
-		} 
-		catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
+			rs =  statement.executeQuery(query);
 			while (rs.next()) {
 
 				int id 			= rs.getInt("id");
@@ -107,15 +164,13 @@ public class DbAccess {
 
 			}
 			rs.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		} 
+		catch (SQLException e) { e.printStackTrace();}
 
         return retEntitySet;
     }
 
-	private Entity getCancion(EdmEntityType edmEntityType, List<UriParameter> keyParams)
-			throws ODataApplicationException {
+	private Entity getCancion(EdmEntityType edmEntityType, List<UriParameter> keyParams) throws ODataApplicationException {
 
 		/* generic approach to find the requested entity */
 		int id 					= -1;
@@ -151,8 +206,7 @@ public class DbAccess {
 		}
 		else {
 			// Throw suitable exception if not exist
-			throw new ODataApplicationException("Entity for requested key doesn't exist",
-					HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
+			throw new ODataApplicationException("Entity for requested key doesn't exist", HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
 		}
 
 		return requestedEntity;
@@ -178,9 +232,7 @@ public class DbAccess {
 			stream = rs.getBytes("cancion");
 			rs.close();
 		} 
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
+		catch (SQLException e) { e.printStackTrace();}
 
 		return stream;
 	}
